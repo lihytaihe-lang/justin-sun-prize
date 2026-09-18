@@ -1,0 +1,6 @@
+/.lake/
+/.tooling/
+/lake-packages/
+/build/
+*.olean
+/references/*.pdf

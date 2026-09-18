@@ -1,4 +1,7 @@
 import JustinSunPrize.JSP000359.Counting
+import Mathlib.Algebra.BigOperators.Intervals
+import Mathlib.Topology.Order.LiminfLimsup
+import Mathlib.Analysis.SpecificLimits.Basic
 
 /-!
 # JSP-000359 / Erdős problem 440: the sharp normalized lower limit

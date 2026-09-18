@@ -1,4 +1,10 @@
-import Mathlib
+import Mathlib.Data.Nat.GCD.Basic
+import Mathlib.Data.Nat.Sqrt
+import Mathlib.Data.Finset.Card
+import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Analysis.Asymptotics.Defs
+import Mathlib.Tactic
 
 /-!
 # JSP-000359 / Erdős problem 440: the square-root counting estimate

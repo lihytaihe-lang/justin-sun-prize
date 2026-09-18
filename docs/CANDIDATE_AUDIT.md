@@ -4,18 +4,21 @@ Audit date: 2026-09-18
 
 ## Outcome
 
-No candidate has passed the adoption gate yet.
+`JSP-000359` has been reactivated as a deliberately later, independent
+reproduction and process trial. It is not treated as the first solution or the
+first Lean formalization.
 
-## Rejected candidate: JSP-000359 / Erdos 440
+## Duplicate status: JSP-000359 / Erdős 440
 
-Reason: duplicate complete formalization.
+An earlier complete formalization exists.
 
 - The official awards repository has an active submission, PR #34, covering
   both the square-root counting bound and the sharp lower-limit result.
 - Official issue #22 records an earlier public Lean proof in
   `plby/lean-proofs`.
-- A new independent implementation would be later in priority and must not be
-  presented as the first or prize-qualifying formalization.
+- This implementation is later in priority and must not be presented as first.
+- The current rules permit multiple valid PRs for the same problem but order
+  them by priority timestamp; a later PR has no guaranteed award share.
 
 References:
 
@@ -50,9 +53,10 @@ re-running or independently checking another person's Lean proof does not make
 the checker the formalization author and is not being treated here as a claim
 to the 30% role.
 
-## Next safe action
+## Current action
 
-Continue monitoring for a newly solved problem whose complete result has not
-yet been formalized, or deliberately choose a research-scale open problem with
-the understanding that completion is uncertain. Do not publish a scope issue,
-formalization PR, or award claim until a candidate passes the adoption gate.
+Complete and verify the independent Lean 4.34 implementation, publish a pinned
+commit in this repository, and only then prepare the narrow catalog-reference
+PR required by the current contribution guide. Continue screening the harder
+remaining problems in parallel with the proof work; do not claim or imply a
+guaranteed payout from this duplicate submission.

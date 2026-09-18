@@ -87,7 +87,7 @@ lemma quotient_strictly_drops (A : PositiveIncreasingSequence) {i x : ℕ}
           Nat.gcd (A i) (A (i + 1)) * A.edgeLcm i := by
             rw [Nat.mul_assoc, hlcmMul]
       _ = A i * A (i + 1) := by
-        simpa [edgeLcm] using Nat.gcd_mul_lcm (A i) (A (i + 1))
+        simp [edgeLcm, Nat.gcd_mul_lcm]
   have hmulGcd := Nat.mul_le_mul_left (Nat.gcd (A i) (A (i + 1))) hquot
   have hmulGap := Nat.mul_le_mul_right (x / A (i + 1)) hgcd
   have hfloor := Nat.div_mul_le_self x (A (i + 1))

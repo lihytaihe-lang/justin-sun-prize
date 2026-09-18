@@ -1,35 +1,39 @@
-# JSP-000359 Lean formalization
+# Justin Sun Prize working repository
 
-Independent working repository for a possible Justin Sun Prize submission for
-`JSP-000359` / Erdos Problem 440.
+Public preflight and implementation workspace for a possible Justin Sun Prize
+submission owned by `lihytaihe-lang`.
 
 ## Current status
 
-This repository is in preflight. No award claim has been made.
+Candidate screening is in progress. No problem is currently claimed and no
+award claim has been made.
 
-Before implementation, the maintainers need to confirm the exact theorem scope
-that counts as a complete formalization. The public catalog description is less
-precise than the original problem, which contains both:
+The initial candidate, `JSP-000359` / Erdos Problem 440, was rejected during
+duplicate screening. It already has an earlier public Lean proof and an active
+official submission. The associated scope notes remain under
+`docs/rejected/jsp-000359/` as an audit trail; they are not a submission.
 
-1. the bound `A(x) = O(sqrt x)`; and
-2. the sharp upper bound `liminf A(x) / sqrt x <= 1`.
+## Selection gate
 
-The short van Doorn exposition proves an explicit `c * sqrt x + log x` bound
-with `c` approximately `1.86`; it does not by itself establish the sharp
-`liminf <= 1` statement.
+A problem may be adopted only after all of the following checks pass:
 
-See [docs/SCOPE_CONFIRMATION_ISSUE.md](docs/SCOPE_CONFIRMATION_ISSUE.md) for the
-maintainer question prepared before formalization begins.
+1. the complete original mathematical result is known and precisely stated;
+2. no complete public Lean formalization has already been released;
+3. no earlier official PR or claim already covers the same complete result;
+4. the proof is feasible with available Mathlib foundations;
+5. the intended deliverable satisfies the official complete-solution rule.
 
-## Sources
+See [docs/CANDIDATE_AUDIT.md](docs/CANDIDATE_AUDIT.md) for the current audit.
 
-- Justin Sun Prize catalog entry: <https://github.com/TheJustinSunPrize/awards/blob/main/problems/catalog-0301-0400.md#jsp-000359>
-- Erdos Problem 440: <https://www.erdosproblems.com/440>
-- P. Erdos and E. Szemeredi, *Remarks on a problem of the American Mathematical Monthly*, Mat. Lapok 28 (1980), 121-124.
-- W. van Doorn, *Sequences with bounded lcm for consecutive elements*.
+## Public sources
+
+- Prize rules: <https://www.hejustinsun.com/prize/rules>
+- Official repository: <https://github.com/TheJustinSunPrize/awards>
+- Contribution rules: <https://github.com/TheJustinSunPrize/awards/blob/main/CONTRIBUTING.md>
+- Public Lean corpus screened for duplicates: <https://github.com/plby/lean-proofs>
 
 ## Submission boundary
 
-The Lean proof will be kept in this external repository. The prize repository
-will receive only catalog references and pinned proof metadata, as required by
-its contribution rules.
+Only original work attributable to this repository's contributor will be
+submitted or claimed. Existing proofs may be cited and audited, but will not be
+represented as this contributor's work.

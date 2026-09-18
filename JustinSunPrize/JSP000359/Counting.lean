@@ -40,9 +40,10 @@ def count (A : PositiveIncreasingSequence) (x : ℕ) : ℕ :=
 
 lemma index_succ_le_term (A : PositiveIncreasingSequence) (i : ℕ) : i + 1 ≤ A i := by
   induction i with
-  | zero => simpa using A.positive 0
+  | zero => exact Nat.one_le_iff_ne_zero.mpr (Nat.ne_of_gt (A.positive 0))
   | succ i ih =>
       have hstep := A.strictlyIncreasing (Nat.lt_succ_self i)
+      simp only [Nat.succ_eq_add_one] at hstep ⊢
       omega
 
 lemma edge_index_lt_threshold {A : PositiveIncreasingSequence} {i x : ℕ}
@@ -80,8 +81,13 @@ lemma quotient_strictly_drops (A : PositiveIncreasingSequence) {i x : ℕ}
   have hlcmMul : A.edgeLcm i / A (i + 1) * A (i + 1) = A.edgeLcm i :=
     Nat.div_mul_cancel (Nat.dvd_lcm_right _ _)
   have hfactor : Nat.gcd (A i) (A (i + 1)) * (A.edgeLcm i / A (i + 1)) = A i := by
-    have hprod := Nat.gcd_mul_lcm (A i) (A (i + 1))
-    nlinarith
+    apply Nat.eq_of_mul_eq_mul_right hright
+    calc
+      (Nat.gcd (A i) (A (i + 1)) * (A.edgeLcm i / A (i + 1))) * A (i + 1) =
+          Nat.gcd (A i) (A (i + 1)) * A.edgeLcm i := by
+            rw [Nat.mul_assoc, hlcmMul]
+      _ = A i * A (i + 1) := by
+        simpa [edgeLcm] using Nat.gcd_mul_lcm (A i) (A (i + 1))
   have hmulGcd := Nat.mul_le_mul_left (Nat.gcd (A i) (A (i + 1))) hquot
   have hmulGap := Nat.mul_le_mul_right (x / A (i + 1)) hgcd
   have hfloor := Nat.div_mul_le_self x (A (i + 1))
@@ -96,6 +102,7 @@ lemma quotient_strictly_drops (A : PositiveIncreasingSequence) {i x : ℕ}
 lemma quotient_injective_on_good (A : PositiveIncreasingSequence) (x : ℕ) :
     Set.InjOn (fun i => x / A i) (A.goodEdges x : Set ℕ) := by
   intro i hi j hj heq
+  change x / A i = x / A j at heq
   rcases lt_trichotomy i j with hij | hij | hji
   · have hterms : A (i + 1) ≤ A j := A.strictlyIncreasing.monotone (by omega)
     have hdiv : x / A j ≤ x / A (i + 1) :=
@@ -141,9 +148,11 @@ theorem count_le_split (A : PositiveIncreasingSequence) (x t : ℕ) :
           exact A.quotient_injective_on_good x
             (Finset.mem_filter.mp hi).1 (Finset.mem_filter.mp hj).1 hij
       _ = x / (t + 1) := by simp
-  have hpartition := Finset.filter_card_add_filter_neg_card_eq_card
+  have hpartition := Finset.card_filter_add_card_filter_not
     (s := G) (fun i => A i ≤ t)
   change G.card ≤ _
+  change (G.filter fun i => A i ≤ t).card +
+      (G.filter fun i => ¬ A i ≤ t).card = G.card at hpartition
   omega
 
 /-- An explicit global bound implying the requested `O(sqrt x)` estimate. -/
@@ -164,7 +173,8 @@ theorem count_isBigO_sqrt (A : PositiveIncreasingSequence) :
   have hcount : (A.count x : ℝ) ≤ 2 * Nat.sqrt x := by
     exact_mod_cast A.count_le_two_sqrt x
   have hsqrt : (Nat.sqrt x : ℝ) ≤ Real.sqrt x := Real.nat_sqrt_le_real_sqrt
-  simp only [Real.norm_eq_abs, abs_of_nonneg (Nat.cast_nonneg _),
+  have hcountNonnegative : (0 : ℝ) ≤ (A.count x : ℝ) := by positivity
+  simp only [Real.norm_eq_abs, abs_of_nonneg hcountNonnegative,
     abs_of_nonneg (Real.sqrt_nonneg _)]
   linarith
 

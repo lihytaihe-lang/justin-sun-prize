@@ -148,7 +148,7 @@ lemma reciprocal_square_sum_lower (n m : ℕ) (hn : 0 < n) :
 theorem exists_large_square_with_small_count (A : PositiveIncreasingSequence) (N : ℕ) :
     ∃ k ≥ N, A.count (k ^ 2) ≤ k := by
   by_contra hcontra
-  push_neg at hcontra
+  push Not at hcontra
   let n := max N 1
   have hn : 0 < n := lt_of_lt_of_le (by omega : 0 < 1) (le_max_right _ _)
   have hlarge : ∀ k ≥ n, k < A.count (k ^ 2) := by
@@ -305,7 +305,7 @@ lemma real_sqrt_tendsto_atTop : Tendsto Real.sqrt atTop atTop := by
 theorem naturals_normalized_tendsto_one :
     Tendsto (normalizedCount naturalsSequence) atTop (𝓝 1) := by
   have hinverse : Tendsto (fun x : ℝ => (Real.sqrt x)⁻¹) atTop (𝓝 0) := by
-    simpa only [Function.comp_apply] using
+    simpa [Function.comp_def] using
       (tendsto_inv_atTop_zero.comp real_sqrt_tendsto_atTop)
   have hvanish : Tendsto (fun x : ℝ => 2 / Real.sqrt x) atTop (𝓝 0) := by
     simpa only [div_eq_mul_inv, mul_zero] using tendsto_const_nhds.mul hinverse

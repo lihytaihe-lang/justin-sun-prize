@@ -22,6 +22,7 @@ jobs:
           build: true
           test: false
           leanchecker: true
+          leanchecker-args: JustinSunPrize
           nanoda: true
           nanoda-allow-sorry: false
           axiom-audit: true

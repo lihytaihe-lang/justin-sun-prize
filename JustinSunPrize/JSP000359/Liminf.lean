@@ -99,7 +99,7 @@ lemma choose_many_tail_edges (A : PositiveIncreasingSequence) (n : ℕ)
         _ = n + m := by simp [hcard]
     have hcount : n + m < (A.goodEdges ((n + m) ^ 2)).card := by
       simpa [count] using hlarge (n + m) (by omega)
-    obtain ⟨i, hiGood, hiFresh⟩ := exists_mem_not_mem_of_card_lt_card
+    obtain ⟨i, hiGood, hiFresh⟩ := exists_mem_notMem_of_card_lt_card
       (lt_of_le_of_lt hused hcount)
     have hiNotS : i ∉ s := fun hi => hiFresh (mem_union.mpr (Or.inr hi))
     have hiTail : n ≤ i := by
@@ -123,7 +123,9 @@ lemma reciprocal_drop_le_inverse_square (t : ℝ) (ht : 0 < t) :
     1 / t - 1 / (t + 1) ≤ 1 / t ^ 2 := by
   have ht1 : 0 < t + 1 := by linarith
   calc
-    _ = 1 / (t * (t + 1)) := by field_simp [ne_of_gt ht, ne_of_gt ht1]
+    _ = 1 / (t * (t + 1)) := by
+      field_simp [ne_of_gt ht, ne_of_gt ht1]
+      ring
     _ ≤ 1 / t ^ 2 := one_div_le_one_div_of_le (sq_pos_of_pos ht) (by nlinarith)
 
 lemma reciprocal_square_sum_lower (n m : ℕ) (hn : 0 < n) :
@@ -162,6 +164,7 @@ theorem exists_large_square_with_small_count (A : PositiveIncreasingSequence) (N
   have hnPlus : (0 : ℝ) < (n : ℝ) + 1 := by positivity
   have hgap : (1 : ℝ) / n - 1 / ((n : ℝ) + 1) = 1 / ((n : ℝ) * (n + 1)) := by
     field_simp [ne_of_gt hnReal, ne_of_gt hnPlus]
+    ring
   have hstrict :
       (1 : ℝ) / ((n : ℝ) + (n * n + 1)) < 1 / ((n : ℝ) * (n + 1)) :=
     one_div_lt_one_div_of_lt (mul_pos hnReal hnPlus) (by nlinarith)
@@ -238,17 +241,20 @@ theorem normalized_liminf_le_one (A : PositiveIncreasingSequence) :
     obtain ⟨n, hn⟩ := exists_nat_gt lower
     obtain ⟨k, hkN, hkCount⟩ := A.exists_large_square_with_small_count (max n 1)
     have hkPositive : 0 < k := by omega
+    have hkOne : 1 ≤ k := (le_max_right _ _).trans hkN
     have hkn : n ≤ k := (le_max_left _ _).trans hkN
     refine ⟨((k ^ 2 : ℕ) : ℝ), ?_, ?_⟩
     · have hnr : (n : ℝ) ≤ k := by exact_mod_cast hkn
+      have hkOneReal : (1 : ℝ) ≤ k := by exact_mod_cast hkOne
       push_cast
       nlinarith
     · unfold normalizedCount realCount
       rw [Nat.floor_natCast, Nat.cast_pow, Real.sqrt_sq (by positivity : (0 : ℝ) ≤ k)]
       apply (div_le_iff₀ (by exact_mod_cast hkPositive : (0 : ℝ) < k)).2
-      exact_mod_cast hkCount
+      simpa using (show ((A.count (k ^ 2) : ℕ) : ℝ) ≤ k by exact_mod_cast hkCount)
   refine liminf_le_of_frequently_le hfrequent ?_
   refine ⟨0, ?_⟩
+  change ∀ᶠ x : ℝ in atTop, 0 ≤ normalizedCount A x
   exact Filter.Eventually.of_forall fun x => by
     unfold normalizedCount
     positivity
@@ -298,9 +304,11 @@ lemma real_sqrt_tendsto_atTop : Tendsto Real.sqrt atTop atTop := by
 
 theorem naturals_normalized_tendsto_one :
     Tendsto (normalizedCount naturalsSequence) atTop (𝓝 1) := by
+  have hinverse : Tendsto (fun x : ℝ => (Real.sqrt x)⁻¹) atTop (𝓝 0) := by
+    simpa only [Function.comp_apply] using
+      (tendsto_inv_atTop_zero.comp real_sqrt_tendsto_atTop)
   have hvanish : Tendsto (fun x : ℝ => 2 / Real.sqrt x) atTop (𝓝 0) := by
-    simpa only [div_eq_mul_inv, mul_zero] using
-      (tendsto_const_nhds.mul (tendsto_inv_atTop_zero.comp real_sqrt_tendsto_atTop))
+    simpa only [div_eq_mul_inv, mul_zero] using tendsto_const_nhds.mul hinverse
   have hlower : Tendsto (fun x : ℝ => 1 - 2 / Real.sqrt x) atTop (𝓝 1) := by
     simpa using tendsto_const_nhds.sub hvanish
   have hbounds : ∀ᶠ x : ℝ in atTop,
